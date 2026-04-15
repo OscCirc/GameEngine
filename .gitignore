@@ -1,0 +1,36 @@
+# Visual Studio specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual C++ specific files
+*.aps
+*.ncb
+*.sdf
+*.opendb
+*.db
+*.VC.db
+
+# Compiled Object files
+*.obj
+*.o
+
+# Compiled libraries/executables
+*.exe
+*.dll
+*.lib
+*.so
+*.dylib
+
+# Debug and profiling files
+*.pdb
+*.idb
+*.ilk
+*.exp
+*.recipe
+
+# Build output directories
+bin/
+bin-int/
