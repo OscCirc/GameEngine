@@ -21,3 +21,15 @@
 
 ## 4. 代码锚点 (Code Anchors)
 当遇到极其复杂的 Hack 手法，或者由于第三方库版本变更导致的调整，在文档中需注明当时的 Git Commit Hash 或教程对应的集数。
+
+## 5. Git 提交规范 (Commit Convention)
+经过血泪教训，我们规定本项目遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/) （约定式提交标准），保持项目的 Git 提交日志干净且高度语义化：
+
+*   **`feat:`** 新增特性/系统（例如：引入 EventSystem、完成 Renderer2D 基础）。
+*   **`fix:`**  修复 Bug 与崩溃（例如：修复 spdlog 重名注册异常、解决 dllimport 与 static inline 冲突）。
+*   **`docs:`** 单纯的文档改动（例如：更新 ADR 记录、补充引擎 API 手册）。
+*   **`refactor:`** 架构重构（没有新功能也没有修复 Bug，纯粹的代码结构重组，引擎中后期极速激增的类别）。
+*   **`chore:`** 构建系统与包管理改动（例如：更新 vcxproj 配置、引入 vcpkg 包、升级 Premake 脚本）。
+*   **`style:`** 代码格式化（不影响运行逻辑的空格、缩进调整）。
+
+> **最佳实践要求**：保持提交的「**原子性**」。不可以在一次名为 `update` 的提交中，既改了渲染器代码，又修了 UI 的 Bug，还顺手改了文档。请分拆为 `feat: xxx`，`fix: xxx` 和 `docs: xxx`。
