@@ -3,14 +3,18 @@
 class Sandbox : public GE::Application
 {
 public:
-	Sandbox();
+	Sandbox()
+	{
 
-	~Sandbox();
+	}
+
+	~Sandbox()
+	{
+
+	}
 };
 
-int main()
+GE::Application* GE::CreateApplication()
 {
-	Sandbox* sandbox = new Sandbox;
-	sandbox->run();
-	delete sandbox;
+	return new Sandbox();
 }

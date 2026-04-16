@@ -24,6 +24,9 @@
     <ClInclude Include="src\Engine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\EntryPoint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Application.cpp">

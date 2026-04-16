@@ -11,4 +11,7 @@ namespace GE {
 
 		void run();
 	};
+
+	// To be defined in client
+	Application* CreateApplication();
 }
