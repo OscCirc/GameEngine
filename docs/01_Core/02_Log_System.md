@@ -37,7 +37,7 @@
 ### 背景与问题
 在初次实现中，利用 C++17 特性尝试在 `.h` 头文件中初始化日志实例：
 `inline static std::shared_ptr<spdlog::logger> s_CoreLogger;`
-但在项目（生成为 DLL）被使用 `__declspec(dllimport)` 导入到 Sandbox 沙盒中时，发生了惨烈的编译失败。
+但在项目（生成为 DLL）被使用 `__declspec(dllimport)` 导入到 Sandbox 沙盒中时，发生了编译失败。
 
 ### 为什么会失败？
 这里存在无法调和的矛盾：
