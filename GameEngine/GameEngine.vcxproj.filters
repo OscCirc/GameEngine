@@ -4,6 +4,9 @@
     <Filter Include="core">
       <UniqueIdentifier>{4E40957C-3A77-960D-E363-7C10CF79120F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="core\Events">
+      <UniqueIdentifier>{72C8B11F-DE7D-2A15-6772-24ECD3262119}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine.h" />
@@ -15,6 +18,9 @@
     </ClInclude>
     <ClInclude Include="src\core\EntryPoint.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Events\Event.h">
+      <Filter>core\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\core\Log.h">
       <Filter>core</Filter>
