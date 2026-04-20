@@ -23,7 +23,7 @@
 当遇到极其复杂的 Hack 手法，或者由于第三方库版本变更导致的调整，在文档中需注明当时的 Git Commit Hash 或教程对应的集数。
 
 ## 5. Git 提交规范 (Commit Convention)
-经过血泪教训，我们规定本项目遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/) （约定式提交标准），保持项目的 Git 提交日志干净且高度语义化：
+我们规定本项目遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/) （约定式提交标准），保持项目的 Git 提交日志干净且高度语义化：
 
 *   **`feat:`** 新增特性/系统（例如：引入 EventSystem、完成 Renderer2D 基础）。
 *   **`fix:`**  修复 Bug 与崩溃（例如：修复 spdlog 重名注册异常、解决 dllimport 与 static inline 冲突）。
