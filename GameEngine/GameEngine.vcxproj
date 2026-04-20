@@ -95,7 +95,8 @@
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>copy /B /Y ..\bin\Debug-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Debug-windows-x86_64\Sandbox</Command>
+      <Command>IF NOT EXIST ..\bin\Debug-windows-x86_64\Sandbox (mkdir ..\bin\Debug-windows-x86_64\Sandbox)
+IF EXIST ..\bin\Debug-windows-x86_64\GameEngine\GameEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,7 +124,8 @@
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>copy /B /Y ..\bin\Release-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Release-windows-x86_64\Sandbox</Command>
+      <Command>IF NOT EXIST ..\bin\Release-windows-x86_64\Sandbox (mkdir ..\bin\Release-windows-x86_64\Sandbox)
+IF EXIST ..\bin\Release-windows-x86_64\GameEngine\GameEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -151,7 +153,8 @@
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>copy /B /Y ..\bin\Dist-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Dist-windows-x86_64\Sandbox</Command>
+      <Command>IF NOT EXIST ..\bin\Dist-windows-x86_64\Sandbox (mkdir ..\bin\Dist-windows-x86_64\Sandbox)
+IF EXIST ..\bin\Dist-windows-x86_64\GameEngine\GameEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\GameEngine\GameEngine.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -159,7 +162,10 @@
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\EntryPoint.h" />
+    <ClInclude Include="src\core\Events\ApplicationEvent.h" />
     <ClInclude Include="src\core\Events\Event.h" />
+    <ClInclude Include="src\core\Events\KeyEvent.h" />
+    <ClInclude Include="src\core\Events\MouseEvent.h" />
     <ClInclude Include="src\core\Log.h" />
   </ItemGroup>
   <ItemGroup>

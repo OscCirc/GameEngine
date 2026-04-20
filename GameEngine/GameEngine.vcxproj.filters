@@ -19,7 +19,16 @@
     <ClInclude Include="src\core\EntryPoint.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\Events\ApplicationEvent.h">
+      <Filter>core\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\core\Events\Event.h">
+      <Filter>core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Events\KeyEvent.h">
+      <Filter>core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Events\MouseEvent.h">
       <Filter>core\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\core\Log.h">
