@@ -2,8 +2,6 @@
 
 #include "core/Core.h"
 
-#include <string>
-#include <functional>
 
 namespace GE
 {
