@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 	GE_INFO("Hello! Var = {0}", a);
 
 	auto app = GE::CreateApplication();
-	app->run();
+	app->Run();
 	delete app;
 }
 #endif
