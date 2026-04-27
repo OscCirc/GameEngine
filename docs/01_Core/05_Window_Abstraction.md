@@ -53,3 +53,63 @@ sequenceDiagram
         Win->>GLFW: glfwSwapBuffers() (后续实现)
     end
 ```
+
+## 4. GLFW 事件分发
+
+窗口层是引擎的**事件源**。GLFW 原生只提供一组 C 风格回调（`glfwSetWindowCloseCallback` / `glfwSetKeyCallback` / `glfwSetMouseButtonCallback` / `glfwSetScrollCallback` / `glfwSetCursorPosCallback` / `glfwSetWindowSizeCallback`），我们需要将它们包装成引擎统一的 `Event` 对象，再通过 `EventCallbackFn` 投递给上层（`Application`）。
+
+### 为什么需要 `glfwSetWindowUserPointer`
+
+GLFW 的回调函数签名是纯 C 函数指针，**不能捕获 lambda 的外部变量**，也就意味着回调内部没有办法直接访问 `WindowsWindow` 的成员（比如 `EventCallback`、`Width`、`Height`）。
+
+为解决这个问题，我们使用了 GLFW 提供的「用户指针」机制：
+1. 在 `WindowsWindow::Init()` 中调用 `glfwSetWindowUserPointer(m_Window, &m_Data)`，把一个包含引擎状态（含事件回调）的结构体指针挂在 `GLFWwindow` 上。
+2. 每一个回调 lambda 内部再通过 `glfwGetWindowUserPointer(window)` 取回这份 `WindowData`，从而拿到 `EventCallback`。
+
+```cpp
+struct WindowData
+{
+    std::string Title;
+    unsigned int Width, Height;
+    bool VSync;
+    EventCallbackFn EventCallback; // Application 注入
+};
+```
+
+### 回调到 Event 的映射
+
+| GLFW 回调 | 包装出的引擎事件 |
+|-----------|------------------|
+| `glfwSetWindowSizeCallback`   | `WindowResizeEvent(width, height)` |
+| `glfwSetWindowCloseCallback`  | `WindowCloseEvent` |
+| `glfwSetKeyCallback`          | `KeyPressedEvent` / `KeyReleasedEvent`（`GLFW_REPEAT` 作为 `repeatCount=1` 合并进 Pressed） |
+| `glfwSetMouseButtonCallback`  | `MouseButtonPressedEvent` / `MouseButtonReleasedEvent` |
+| `glfwSetScrollCallback`       | `MouseScrolledEvent(xOffset, yOffset)` |
+| `glfwSetCursorPosCallback`    | `MouseMovedEvent(xPos, yPos)` |
+
+此外我们还注册了 `glfwSetErrorCallback`，把 GLFW 的错误码和描述转发到引擎日志（`GE_CORE_ERROR`），方便在 GLFW 初始化/运行失败时定位问题。
+
+### 完整分发链路
+
+```mermaid
+sequenceDiagram
+    participant OS as 操作系统
+    participant GLFW
+    participant Win as WindowsWindow (回调 lambda)
+    participant App as Application::OnEvent
+    participant Disp as EventDispatcher
+
+    OS->>GLFW: 键盘/鼠标/窗口消息
+    GLFW->>Win: 触发 C 风格回调
+    Win->>Win: glfwGetWindowUserPointer() 取回 WindowData
+    Win->>Win: new XxxEvent(...) 包装
+    Win->>App: data.EventCallback(event)
+    App->>Disp: EventDispatcher(e).Dispatch<T>(handler)
+    Disp-->>App: 匹配到 WindowCloseEvent → m_Running = false
+```
+
+> `Application` 通过 `m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent))` 把自身的成员函数绑定进来，窗口侧对上层零依赖，只认一个 `std::function<void(Event&)>`。
+
+## 架构演进记录
+
+- **[feat] Wire GLFW callbacks to engine event dispatch**：窗口层正式接入事件系统。在 `WindowsWindow::Init()` 中注册 6 类 GLFW 回调，统一借助 `glfwSetWindowUserPointer` 回取 `WindowData` 并转发为引擎 `Event`；`Application` 通过 `SetEventCallback` 订阅，并以 `EventDispatcher` 消费 `WindowCloseEvent` 以实现正常退出。同步增加 `glfwSetErrorCallback` 以便诊断。

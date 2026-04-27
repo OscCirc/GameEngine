@@ -97,3 +97,37 @@ bool Dispatch(EventFn<T> func)
 | `Events/ApplicationEvent.h` | 窗口与应用级事件 |
 | `Events/KeyEvent.h` | 键盘输入事件 |
 | `Events/MouseEvent.h` | 鼠标输入事件 |
+
+## 6. 事件源与分发入口
+
+事件系统本身只定义「事件是什么」和「如何分发」，真正的**事件源**位于平台层的窗口实现。以 Windows 为例，`WindowsWindow` 在 `Init()` 中注册 GLFW 回调，将原生消息包装成引擎 `Event`，再通过 `WindowData::EventCallback` 回调投递（详见 [05_Window_Abstraction](./05_Window_Abstraction.md#4-glfw-事件分发)）。
+
+`Application` 是当前唯一的顶层事件入口：
+
+```cpp
+#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+
+Application::Application()
+{
+    m_Window = std::unique_ptr<Window>(Window::Create());
+    m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+}
+
+void Application::OnEvent(Event& e)
+{
+    EventDispatcher dispatcher(e);
+    dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+}
+```
+
+当前链路为：
+
+```
+OS → GLFW → WindowsWindow 回调 lambda → Application::OnEvent → EventDispatcher::Dispatch<T>
+```
+
+后续 Layer / ImGui / Scene 等子系统接入事件系统时，都将以类似 `OnEvent(Event&)` 的形式插入到 `Application::OnEvent` 之后，形成事件传播链。
+
+## 架构演进记录
+
+- **[feat] Wire GLFW callbacks to engine event dispatch**：打通「事件源 → 事件分发器」的首条链路。`Application` 通过 `Window::SetEventCallback` 绑定 `OnEvent`，并使用 `EventDispatcher` 匹配 `WindowCloseEvent` 来终止主循环，验证了事件基建在真实输入下的可用性。
